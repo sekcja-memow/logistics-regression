@@ -1,6 +1,7 @@
 import numpy as np
-from .helpers import sigmoid, sign
-from .optimizers import OptimizerInterface
+from .helpers import sigmoid
+from .optimizers import OptimizerInterface, AdamOptimizer
+from .regularizers import RegularizerInterface, RegularizerL2
 
 
 class LogisticRegression:
@@ -41,15 +42,27 @@ class LogisticRegression:
     >>> model.evaluate(y_test, y_pred)
     0.9275510204081632
     """
+    theta: np.ndarray
 
-    def __init__(self, optimizer: OptimizerInterface, num_iterations=100, threshold=0.5, verbose=False):
+    def __init__(self, optimizer: OptimizerInterface = AdamOptimizer(),
+                 regularizer: RegularizerInterface = RegularizerL2(),
+                 num_iterations=500, threshold: np.float = 0.5, fit_intercept: bool = True, verbose: bool = False):
         self.optimizer = optimizer
+        self.regularizer = regularizer
+        if num_iterations <= 0:
+            raise ValueError('num_iterations must be greater than 0')
         self.num_iterations = num_iterations
-
+        if threshold < 0 or threshold > 1:
+            raise ValueError('Threshold value must be between 0 and 1')
         self.threshold = threshold
+        self.fit_intercept = fit_intercept
         self.verbose = verbose
 
-    def cost(self, X: np.ndarray, y: np.ndarray, theta: np.ndarray) -> float:
+    def add_intercept(self, X) -> np.ndarray:
+        intercept = np.ones((X.shape[0], 1))
+        return np.concatenate((intercept, X), axis=1)
+
+    def cost(self, X: np.ndarray, y: np.ndarray) -> float:
         """
         Computes the cost of logistic regression.
         Parameters
@@ -65,8 +78,10 @@ class LogisticRegression:
         float
             The cost at the point theta.
         """
-        h = sigmoid(X @ theta)
+        h = sigmoid(X @ self.theta)
         cost = (-y * np.log(h) - (1 - y) * np.log(1 - h)).mean()
+        if self.regularizer:
+            return cost + self.regularizer.cost(self.theta)
         return cost
 
     def gradient(self, X: np.ndarray, y: np.ndarray, theta: np.ndarray) -> np.ndarray:
@@ -85,12 +100,14 @@ class LogisticRegression:
         np.ndarray
             The gradient of the cost function.
         """
-        m = y.size # number of probs
+        m = y.size
         h = sigmoid(X @ theta)
         grad = (1 / m) * (X.T @ (h - y))
+        if self.regularizer:
+            return grad + self.regularizer.gradient(self.theta)
         return grad
 
-    def fit(self, X: np.ndarray, y: np.ndarray) -> None:
+    def fit(self, X: np.ndarray, y: np.ndarray) -> LogisticRegression:
         """
         Fit the model to the given data.
         Parameters
@@ -103,8 +120,9 @@ class LogisticRegression:
         -------
         self
         """
+        if self.fit_intercept:
+            X = self.add_intercept(X)
         self.theta = np.zeros(X.shape[1])
-        momentum = np.ones_like(self.theta)
 
         for epoch in range(self.num_iterations):
             grad = self.gradient(X, y, self.theta)
@@ -112,8 +130,9 @@ class LogisticRegression:
             self.theta = self.optimizer.optimize(self.theta, grad)
 
             if epoch % 10 == 0 and self.verbose:
-                cost = self.cost(X, y, self.theta)
-                print(f"Epoch number {epoch} of {self.num_iterations}: cost={cost}")
+                cost = self.cost(X, y)
+                print(f"Epoch number {epoch} of {self.num_iterations}: loss:{cost}")
+        return self
 
     def predict(self, X: np.ndarray) -> np.ndarray:
         """
@@ -127,6 +146,8 @@ class LogisticRegression:
         np.ndarray
             Predicted labels.
         """
+        if self.fit_intercept:
+            X = self.add_intercept(X)
         return np.int8(sigmoid(np.dot(X, self.theta)) >= self.threshold)
 
 

@@ -13,10 +13,10 @@ def sigmoid(x: np.ndarray) -> np.ndarray:
     np.ndarray
         Transformated input vector by sigmoid function.
     """
-    return 1 / (1 + np.exp(-X))
+    return 1 / (1 + np.exp(-x))
 
 
-def sign(theta: int) -> int:
+def sign(theta: np.float) -> int:
     """
     The sign function.
     Parameters
