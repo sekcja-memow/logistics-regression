@@ -1,7 +1,7 @@
 import numpy as np
 from .helpers import sigmoid
 from .optimizers import OptimizerInterface, AdamOptimizer
-from .regularizers import RegularizerInterface, RegularizerL2
+from .regularizers import RegularizerInterface, RidgeRegularizer
 
 
 class LogisticRegression:
@@ -9,23 +9,12 @@ class LogisticRegression:
     Logistic Regression simple classifier.
     Parameters
     ----------
-    optimizer: Optimizer object
-        Optimizer algorithm.
-        - Gradient descent optimizer with momentum.
-        - Momentum Gradient descent.
+    optimizer: Optimizer instance: OptimizerInterface, default=AdamOptimizer()
+        Optimizer algorithm used to optimize model cost.
+    regularizer: Regularizer instance: RegularizerInterface, default=RegularizerL2()
+        Regularization algorithm is used to limit the models cost function.
     num_iterations: int, default=100
-        Number of iterations for the optimizer algorithm.
-    penalty: {'l1', 'l2', 'elasticnet', 'none'}, default='l1'
-        Penalty form used in regularization.
-        - 'l1' L1 regularization.
-        - 'l2' L2 regularization.
-        - 'elasticnet' Elastic net regularization.
-    l1_rate: float, default=0.1
-        L1 regularization coefficient.
-    l2_rate: float, default=0.1
-        L2 regularization coefficient.
-    alpha: float, default=0.8
-        Proportionality coefficient in elastic net regularization.
+        Number of iterations for the optimizer algorithm..
     threshold: float, default=0.5
         Logistic regression decision threshold.
     verbose: boolean, default=False
@@ -107,7 +96,7 @@ class LogisticRegression:
             return grad + self.regularizer.gradient(self.theta)
         return grad
 
-    def fit(self, X: np.ndarray, y: np.ndarray) -> LogisticRegression:
+    def fit(self, X: np.ndarray, y: np.ndarray) -> object:
         """
         Fit the model to the given data.
         Parameters
@@ -149,7 +138,6 @@ class LogisticRegression:
         if self.fit_intercept:
             X = self.add_intercept(X)
         return np.int8(sigmoid(np.dot(X, self.theta)) >= self.threshold)
-
 
     @staticmethod
     def evaluate(y_true: np.ndarray, y_pred: np.ndarray) -> float:
