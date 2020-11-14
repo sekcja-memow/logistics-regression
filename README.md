@@ -11,14 +11,18 @@ LR is a propabilistic model that assigns the probability of a sample to a given 
 
 **SVM** - Support Vector Machine - it is an algorithm capable of both classification and regression. However, we will focus on its ability to classify samples into the appropriate class.
 The concept of SVM is to create a hyperplane that will separate the two classes with a maximum margin.
-<img src="https://www.researchgate.net/publication/304611323/figure/fig8/AS:668377215406089@1536364954428/Classification-of-data-by-support-vector-machine-SVM.png" />
+
+<img width="400" src="https://www.researchgate.net/publication/304611323/figure/fig8/AS:668377215406089@1536364954428/Classification-of-data-by-support-vector-machine-SVM.png" />
 
 
 ### Interface
 Our models provide a clean interface based on the `sklearn` library interface.
 In addition to the models themselves, various regularizers and optimization algorithms are available.
+You can find more about linear regression [here](https://en.wikipedia.org/wiki/Logistic_regression).
 
-You can find more info in docs.
+<img width="400" src="./docs/images/structure.png"/>
+
+You can find more info in [docs](./docs/docs.md).
 
 #### Basic Example
 ```python
@@ -28,4 +32,4 @@ model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
 score = model.evaluate(y_test, y_pred)
 ```
-You can find more examples in examples section.
+You can find more examples in [examples section :fire:](./src/examples.ipynb).
