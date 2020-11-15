@@ -11,9 +11,9 @@ class LogisticRegression:
     ----------
     optimizer: Optimizer instance: OptimizerInterface, default=AdamOptimizer()
         Optimizer algorithm used to optimize model cost.
-    regularizer: Regularizer instance: RegularizerInterface, default=RegularizerL2()
+    regularizer: Regularizer instance: RegularizerInterface, default=RidgeRegularizer()
         Regularization algorithm is used to limit the models cost function.
-    num_iterations: int, default=100
+    num_iterations: int, default=300
         Number of iterations for the optimizer algorithm..
     threshold: float, default=0.5
         Logistic regression decision threshold.
@@ -34,8 +34,8 @@ class LogisticRegression:
     theta: np.ndarray
 
     def __init__(self, optimizer: OptimizerInterface = AdamOptimizer(),
-                 regularizer: RegularizerInterface = RegularizerL2(),
-                 num_iterations=500, threshold: np.float = 0.5, fit_intercept: bool = True, verbose: bool = False):
+                 regularizer: RegularizerInterface = RidgeRegularizer(),
+                 num_iterations=300, threshold: np.float = 0.5, fit_intercept: bool = True, verbose: bool = False):
         self.optimizer = optimizer
         self.regularizer = regularizer
         if num_iterations <= 0:
