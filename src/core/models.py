@@ -1,4 +1,5 @@
 import numpy as np
+from sklearn.utils import shuffle
 from .helpers import sigmoid
 from .optimizers import OptimizerInterface, AdamOptimizer
 from .regularizers import RegularizerInterface, RidgeRegularizer
@@ -120,7 +121,8 @@ class LogisticRegression:
 
             if epoch % 10 == 0 and self.verbose:
                 cost = self.cost(X, y)
-                print(f"Epoch number {epoch} of {self.num_iterations}: loss:{cost}")
+                print(
+                    f"Epoch number {epoch} of {self.num_iterations}: loss:{cost}")
         return self
 
     def predict(self, X: np.ndarray) -> np.ndarray:
@@ -144,3 +146,85 @@ class LogisticRegression:
         TP = len([a for a, p in zip(y_true, y_pred) if a == p and p == 1])
         FP = len([a for a, p in zip(y_true, y_pred) if a != p and p == 1])
         return TP / (TP + FP)
+
+
+class SVM:
+    def __init__(self):
+        self.max_epochs = 1024
+        self.regularization_strength = 10000
+        self.learning_rate = 0.000001
+        self.cost_threshold = 0.01
+
+        self.weights = []
+
+    def cost(self, W, X, Y):
+        # calculate hinge loss
+        N = X.shape[0]
+        distances = 1 - Y * (np.dot(X, W))
+        distances[distances < 0] = 0  # equivalent to max(0, distance)
+        hinge_loss = self.regularization_strength * (np.sum(distances) / N)
+
+        # calculate cost
+        cost = 1 / 2 * np.dot(W, W) + hinge_loss
+        return cost
+
+    def cost_gradient(self, W, X_batch, Y_batch):
+        # if only one example is passed (eg. in case of SGD)
+        if type(Y_batch) == np.float64:
+            Y_batch = np.array([Y_batch])
+            X_batch = np.array([X_batch])  # gives multidimensional array
+
+        distance = 1 - (Y_batch * np.dot(X_batch, W))
+        dw = np.zeros(len(W))
+
+        for ind, d in enumerate(distance):
+            if max(0, d) == 0:
+                di = W
+            else:
+                di = W - (self.regularization_strength *
+                          Y_batch[ind] * X_batch[ind])
+            dw += di
+
+        dw = dw/len(Y_batch)  # average
+        return dw
+
+    def fit(self, X: np.ndarray, y: np.ndarray):
+        # Add b in form of intercept
+        samples, features = X.shape
+        X_intercept = np.ones((samples, features + 1))
+        X_intercept[:, :-1] = X
+        # Temp variables
+        weights = np.zeros(features + 1)
+        nth = 0
+        prev_cost = float("inf")
+        # stochastic gradient descent
+        for epoch in range(1, self.max_epochs):
+            # shuffle to prevent repeating update cycles
+            Xs, ys = shuffle(X_intercept, y)
+            for ind, x in enumerate(Xs):
+                ascent = self.cost_gradient(weights, x, ys[ind])
+                weights = weights - (self.learning_rate * ascent)
+
+            # convergence check on 2^nth epoch
+            if epoch == 2 ** nth or epoch == self.max_epochs - 1:
+                cost = self.cost(weights, X_intercept, y)
+                print("Epoch is: {} and Cost is: {}".format(epoch, cost))
+                # stoppage criterion
+                if abs(prev_cost - cost) < self.cost_threshold * prev_cost:
+                    self.weights = weights
+                    return
+                prev_cost = cost
+                nth += 1
+        self.weights = weights
+
+    def predict(self, X: np.ndarray):
+        # Extend the array with intercept to match weights
+        samples, features = X.shape
+        X_intercept = np.ones((samples, features + 1))
+        X_intercept[:, :-1] = X
+
+        result = np.array([])
+        for i in range(samples):
+            prediction = np.sign(np.dot(X_intercept[i], self.weights))
+            result = np.append(result, prediction)
+        return result
