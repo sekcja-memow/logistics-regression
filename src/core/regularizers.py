@@ -56,6 +56,7 @@ class LassoRegularizer(RegularizerInterface):
     >>> regularizer.gradient(theta)
     [ 0.2 4.1 1.3 -2.4 ]
     """
+
     def __init__(self, alpha: np.float = 0.1):
         self.alpha = alpha
 
@@ -84,6 +85,7 @@ class RidgeRegularizer(RegularizerInterface):
     >>> regularizer.gradient(theta)
     [ 0.2 4.1 1.3 -2.4 ]
     """
+
     def __init__(self, alpha: np.float = 0.1):
         self.alpha = alpha
 
@@ -118,6 +120,7 @@ class ElasticNetRegularizer(RegularizerInterface):
     >>> regularizer.gradient(theta)
     [ 0.2 4.1 1.3 -2.4 ]
     """
+
     def __init__(self, alpha: np.float = 0.1, beta: np.float = 0.1, gamma: np.float = 0.8):
         self.alpha = alpha
         self.beta = beta
