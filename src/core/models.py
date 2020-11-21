@@ -1,5 +1,6 @@
 import numpy as np
 from sklearn.utils import shuffle
+from sklearn.metrics import accuracy_score, recall_score, precision_score
 from .helpers import sigmoid
 from .optimizers import OptimizerInterface, AdamOptimizer
 from .regularizers import RegularizerInterface, RidgeRegularizer
@@ -149,15 +150,19 @@ class LogisticRegression:
 
 
 class SVM:
-    def __init__(self):
-        self.max_epochs = 1024
-        self.regularization_strength = 10000
-        self.learning_rate = 0.000001
-        self.cost_threshold = 0.01
+    def __init__(self, max_epochs: int = 1024, regularization_strength: int = 10000,
+                 learning_rate: float = 0.000001, cost_treshold: float = 0.01,
+                 fit_intercept: bool = True, verbose: bool = True):
+        self.max_epochs = max_epochs
+        self.regularization_strength = regularization_strength
+        self.learning_rate = learning_rate
+        self.cost_threshold = cost_treshold
 
+        self.fit_intercept = fit_intercept
+        self.verbose = verbose
         self.weights = []
 
-    def cost(self, W, X, Y):
+    def cost(self, W, X, Y) -> float:
         # calculate hinge loss
         N = X.shape[0]
         distances = 1 - Y * (np.dot(X, W))
@@ -168,7 +173,7 @@ class SVM:
         cost = 1 / 2 * np.dot(W, W) + hinge_loss
         return cost
 
-    def cost_gradient(self, W, X_batch, Y_batch):
+    def gradient(self, W, X_batch, Y_batch) -> np.ndarray:
         # if only one example is passed (eg. in case of SGD)
         if type(Y_batch) == np.float64:
             Y_batch = np.array([Y_batch])
@@ -188,27 +193,38 @@ class SVM:
         dw = dw/len(Y_batch)  # average
         return dw
 
-    def fit(self, X: np.ndarray, y: np.ndarray):
-        # Add b in form of intercept
-        samples, features = X.shape
-        X_intercept = np.ones((samples, features + 1))
-        X_intercept[:, :-1] = X
+    def fit(self, X: np.ndarray, y: np.ndarray) -> None:
+        """
+        Fit the model to the given data.
+        Parameters
+        ----------
+        X: np.ndarray
+            Training vector.
+        y: np.ndarray
+            Training labels.
+        Returns
+        -------
+        self
+        """
+        if self.fit_intercept:
+            X = self.add_intercept(X)
         # Temp variables
-        weights = np.zeros(features + 1)
+        weights = np.zeros(X.shape[1])
         nth = 0
         prev_cost = float("inf")
         # stochastic gradient descent
         for epoch in range(1, self.max_epochs):
             # shuffle to prevent repeating update cycles
-            Xs, ys = shuffle(X_intercept, y)
+            Xs, ys = shuffle(X, y)
             for ind, x in enumerate(Xs):
-                ascent = self.cost_gradient(weights, x, ys[ind])
+                ascent = self.gradient(weights, x, ys[ind])
                 weights = weights - (self.learning_rate * ascent)
 
             # convergence check on 2^nth epoch
             if epoch == 2 ** nth or epoch == self.max_epochs - 1:
-                cost = self.cost(weights, X_intercept, y)
-                print("Epoch is: {} and Cost is: {}".format(epoch, cost))
+                cost = self.cost(weights, X, y)
+                if self.verbose:
+                    print("Epoch is: {} and Cost is: {}".format(epoch, cost))
                 # stoppage criterion
                 if abs(prev_cost - cost) < self.cost_threshold * prev_cost:
                     self.weights = weights
@@ -217,14 +233,42 @@ class SVM:
                 nth += 1
         self.weights = weights
 
-    def predict(self, X: np.ndarray):
-        # Extend the array with intercept to match weights
-        samples, features = X.shape
-        X_intercept = np.ones((samples, features + 1))
-        X_intercept[:, :-1] = X
-
+    def predict(self, X: np.ndarray) -> np.ndarray:
+        """
+        Predict labels by the given data.
+        Parameters
+        ----------
+        X: np.ndarray
+            Test vector.
+        Returns
+        -------
+        np.ndarray
+            Predicted labels.
+        """
         result = np.array([])
-        for i in range(samples):
-            prediction = np.sign(np.dot(X_intercept[i], self.weights))
+        for i in range(X.shape[0]):
+            prediction = np.sign(np.dot(X[i], self.weights))
             result = np.append(result, prediction)
         return result
+
+    @staticmethod
+    def evaluate(y_test, y_pred) -> None:
+        """
+        Check the accuaracy of the model.
+        Parameters
+        ----------
+        y_test: np.ndarray
+            Test result vector.
+        y_pred: np.ndarray
+            Vector predicted by classifier.
+        """
+        print("accuracy on test dataset: {}".format(
+            accuracy_score(y_test, y_pred)))
+        print("recall on test dataset: {}".format(
+            recall_score(y_test, y_pred)))
+        print("precision on test dataset: {}".format(
+            recall_score(y_test, y_pred)))
+
+    def add_intercept(self, X) -> np.ndarray:
+        intercept = np.ones((X.shape[0], 1))
+        return np.concatenate((intercept, X), axis=1)
