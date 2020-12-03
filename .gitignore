@@ -139,6 +139,3 @@ cython_debug/
 
 # Vscode
 .vscode
-
-# datasets
-datasets/prime_numbers
