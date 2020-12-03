@@ -48,6 +48,12 @@ class LogisticRegression:
         self.threshold = threshold
         self.fit_intercept = fit_intercept
         self.verbose = verbose
+    def get_params(self, deep=True):
+        return {"optimizer": self.optimizer,
+            "regularizer": self.regularizer,
+            "num_iterations": self.num_iterations,
+            "threshold": self.threshold,
+            "fit_intercept": self.fit_intercept}
 
     def add_intercept(self, X) -> np.ndarray:
         intercept = np.ones((X.shape[0], 1))
@@ -142,6 +148,9 @@ class LogisticRegression:
             X = self.add_intercept(X)
         return np.int8(sigmoid(np.dot(X, self.theta)) >= self.threshold)
 
+    def __str__(self):
+        return f"class: {type(self).__name__}, optimizer: {type(self.optimizer).__name__}, regularizer: {type(self.regularizer).__name__}, num_iterations: {self.num_iterations}, threshold: {self.threshold}, fit_intercept: {self.fit_intercept}"
+    
     @staticmethod
     def evaluate(y_true: np.ndarray, y_pred: np.ndarray) -> float:
         TP = len([a for a, p in zip(y_true, y_pred) if a == p and p == 1])
@@ -151,16 +160,19 @@ class LogisticRegression:
 
 class SVM:
     def __init__(self, max_epochs: int = 1024, regularization_strength: int = 10000,
-                 learning_rate: float = 0.000001, cost_treshold: float = 0.01,
+                 learning_rate: float = 0.000001, cost_threshold: float = 0.01,
                  fit_intercept: bool = True, verbose: bool = True):
         self.max_epochs = max_epochs
         self.regularization_strength = regularization_strength
         self.learning_rate = learning_rate
-        self.cost_threshold = cost_treshold
+        self.cost_threshold = cost_threshold
 
         self.fit_intercept = fit_intercept
         self.verbose = verbose
         self.weights = []
+        
+    def __str__(self):
+        return f"class: {type(self).__name__}, max_epochs: {self.max_epochs}, regularization_strength: {self.regularization_strength}, learning_rate: {self.learning_rate}, cost_threshold: {self.cost_threshold}, fit_intercept: {self.fit_intercept}"
 
     def cost(self, W, X, Y) -> float:
         # calculate hinge loss

@@ -42,6 +42,8 @@ class GradientDescentOptimizer(OptimizerInterface):
 
     def optimize(self, theta: np.ndarray, gradient: np.ndarray) -> np.ndarray:
         return theta - self.learning_rate * gradient
+    def __str__(self):
+        return f"name: {type(self).__name__}, learning_rate: {self.learning_rate}"
 
 
 class MomentumGradientDescentOptimizer(OptimizerInterface):
@@ -79,7 +81,8 @@ class MomentumGradientDescentOptimizer(OptimizerInterface):
             self.momentum = np.ones_like(theta)
         self.momentum = self.momentum_rate * self.momentum - self.learning_rate * gradient
         return theta + self.momentum
-
+    def __str__(self):
+        return f"name: {type(self).__name__}, learning_rate: {self.learning_rate}, momentum_rate: {self.momentum_rate}"
 
 class AdaGradOptimizer(OptimizerInterface):
     """
@@ -113,7 +116,8 @@ class AdaGradOptimizer(OptimizerInterface):
             self.s = np.zeros_like(gradient)
         self.s = self.s + gradient * gradient
         return theta - self.learning_rate * gradient / np.sqrt(self.s + self.epsilon)
-
+    def __str__(self):
+        return f"name: {type(self).__name__}, learning_rate: {self.learning_rate}, epsilon: {self.epsilon}"
 
 class RMSPropOptimizer(OptimizerInterface):
     """
@@ -154,6 +158,8 @@ class RMSPropOptimizer(OptimizerInterface):
         self.s = self.beta * self.s + (1 - self.beta) * gradient * gradient
         return theta - self.learning_rate * gradient / np.sqrt(self.s + self.epsilon)
 
+    def __str__(self):
+        return f"name: {type(self).__name__}, learning_rate: {self.learning_rate}, beta: {self.beta}, epsilon: {self.epsilon}"
 
 class AdamOptimizer(OptimizerInterface):
     """
@@ -193,8 +199,7 @@ class AdamOptimizer(OptimizerInterface):
     s: np.ndarray = None
     t: np.int = 0
 
-    def __init__(self, learning_rate: np.float = 0.03, beta1: np.float = 0.9, beta2: np.float = 0.999,
-                 epsilon: np.float = 1e-7):
+    def __init__(self, learning_rate: np.float = 0.03, beta1: np.float = 0.9, beta2: np.float = 0.999, epsilon: np.float = 1e-7):
         self.learning_rate = learning_rate
         self.beta1 = beta1
         self.beta2 = beta2
@@ -211,3 +216,6 @@ class AdamOptimizer(OptimizerInterface):
         self.momentum = self.momentum / (1 - self.beta1 ** self.t)
         self.s = self.s / (1 - self.s ** self.t)
         return theta - self.learning_rate * self.momentum / np.sqrt(self.s + self.epsilon)
+    
+    def __str__(self):
+        return f"name: {type(self).__name__}, learning_rate: {self.learning_rate}, beta1: {self.beta1}, beta2: {self.beta2}, epsilon: {self.epsilon}"
