@@ -48,12 +48,25 @@ class LogisticRegression:
         self.threshold = threshold
         self.fit_intercept = fit_intercept
         self.verbose = verbose
-    def get_params(self, deep=True):
-        return {"optimizer": self.optimizer,
-            "regularizer": self.regularizer,
-            "num_iterations": self.num_iterations,
-            "threshold": self.threshold,
-            "fit_intercept": self.fit_intercept}
+
+    def __str__(self):
+            return f"{type(self).__name__}(optimizer: {self.optimizer}, regularizer:" \
+                   f" {self.regularizer}, num_iterations: {self.num_iterations}, threshold: {self.threshold}, " \
+                   f"fit_intercept: {self.fit_intercept})"
+
+    def __repr__(self):
+        return f"{type(self).__name__}(optimizer: {self.optimizer}, regularizer:" \
+               f" {self.regularizer}, num_iterations: {self.num_iterations}, threshold: {self.threshold}, " \
+               f"fit_intercept: {self.fit_intercept})"
+
+    def get_params(self):
+        return {
+                "optimizer": self.optimizer,
+                "regularizer": self.regularizer,
+                "num_iterations": self.num_iterations,
+                "threshold": self.threshold,
+                "fit_intercept": self.fit_intercept
+                }
 
     def add_intercept(self, X) -> np.ndarray:
         intercept = np.ones((X.shape[0], 1))
@@ -101,7 +114,7 @@ class LogisticRegression:
         h = sigmoid(X @ theta)
         grad = (1 / m) * (X.T @ (h - y))
         if self.regularizer:
-            return grad + self.regularizer.gradient(self.theta)
+            return grad + self.regularizer.gradient(theta)
         return grad
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> object:
@@ -121,7 +134,7 @@ class LogisticRegression:
             X = self.add_intercept(X)
         self.theta = np.zeros(X.shape[1])
 
-        for epoch in range(self.num_iterations):
+        for epoch in range(1, self.num_iterations+1):
             grad = self.gradient(X, y, self.theta)
 
             self.theta = self.optimizer.optimize(self.theta, grad)
@@ -148,20 +161,24 @@ class LogisticRegression:
             X = self.add_intercept(X)
         return np.int8(sigmoid(np.dot(X, self.theta)) >= self.threshold)
 
-    def __str__(self):
-        return f"class: {type(self).__name__}, optimizer: {type(self.optimizer).__name__}, regularizer: {type(self.regularizer).__name__}, num_iterations: {self.num_iterations}, threshold: {self.threshold}, fit_intercept: {self.fit_intercept}"
-    
     @staticmethod
     def evaluate(y_true: np.ndarray, y_pred: np.ndarray) -> float:
         TP = len([a for a, p in zip(y_true, y_pred) if a == p and p == 1])
         FP = len([a for a, p in zip(y_true, y_pred) if a != p and p == 1])
-        return TP / (TP + FP)
+        try:
+            return TP / (TP + FP)
+        except ZeroDivisionError:
+            return np.inf
 
 
-class SVM:
+class SVMClassifier:
+    """
+    TODO: docs
+    """
     def __init__(self, max_epochs: int = 1024, regularization_strength: int = 10000,
                  learning_rate: float = 0.000001, cost_threshold: float = 0.01,
                  fit_intercept: bool = True, verbose: bool = True):
+        # TODO: reformat interface
         self.max_epochs = max_epochs
         self.regularization_strength = regularization_strength
         self.learning_rate = learning_rate
@@ -170,9 +187,16 @@ class SVM:
         self.fit_intercept = fit_intercept
         self.verbose = verbose
         self.weights = []
-        
+
     def __str__(self):
-        return f"class: {type(self).__name__}, max_epochs: {self.max_epochs}, regularization_strength: {self.regularization_strength}, learning_rate: {self.learning_rate}, cost_threshold: {self.cost_threshold}, fit_intercept: {self.fit_intercept}"
+        return f"{type(self).__name__}(max_epochs: {self.max_epochs}, regularization_strength:" \
+               f" {self.regularization_strength}, learning_rate: {self.learning_rate}, cost_threshold: " \
+               f"{self.cost_threshold}, fit_intercept: {self.fit_intercept})"
+
+    def __repr__(self):
+        return f"{type(self).__name__}(max_epochs: {self.max_epochs}, regularization_strength:" \
+               f" {self.regularization_strength}, learning_rate: {self.learning_rate}, cost_threshold: " \
+               f"{self.cost_threshold}, fit_intercept: {self.fit_intercept})"
 
     def cost(self, W, X, Y) -> float:
         # calculate hinge loss

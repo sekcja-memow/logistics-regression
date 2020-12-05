@@ -60,6 +60,12 @@ class LassoRegularizer(RegularizerInterface):
     def __init__(self, alpha: np.float = 0.1):
         self.alpha = alpha
 
+    def __str__(self):
+        return f'{type(self).__name__}(alpha: {self.alpha})'
+
+    def __repr__(self):
+        return f'{type(self).__name__}(alpha: {self.alpha})'
+
     def cost(self, theta: np.ndarray) -> np.ndarray:
         return self.alpha * np.sum(np.abs(theta))
 
@@ -88,6 +94,12 @@ class RidgeRegularizer(RegularizerInterface):
 
     def __init__(self, alpha: np.float = 0.1):
         self.alpha = alpha
+
+    def __str__(self):
+        return f'{type(self).__name__}(alpha: {self.alpha})'
+
+    def __repr__(self):
+        return f'{type(self).__name__}(alpha: {self.alpha})'
 
     def cost(self, theta: np.ndarray) -> np.ndarray:
         return 0.5 * self.alpha * np.sum(np.power(theta, 2))
@@ -125,6 +137,12 @@ class ElasticNetRegularizer(RegularizerInterface):
         self.alpha = alpha
         self.beta = beta
         self.gamma = gamma
+
+    def __str__(self):
+        return f'{type(self).__name__}(alpha: {self.alpha}, beta: {self.beta}, gamma: {self.gamma})'
+
+    def __repr__(self):
+        return f'{type(self).__name__}(alpha: {self.alpha}, beta: {self.beta}, gamma: {self.gamma})'
 
     def cost(self, theta: np.ndarray) -> np.ndarray:
         l1 = self.alpha * np.sum(np.abs(theta))
