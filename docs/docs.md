@@ -15,7 +15,7 @@
 5. `AdamOptimizer`
 
 #### Interface
-<img width="800" src="./docs/images/structure.png"/>
+<img width="800" src="./images/structure.png"/>
 
 
 
