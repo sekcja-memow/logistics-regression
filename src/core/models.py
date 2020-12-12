@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.utils import shuffle
 from sklearn.metrics import accuracy_score, recall_score, precision_score
 from .helpers import sigmoid
-from .optimizers import OptimizerInterface, AdamOptimizer
+from .optimizers import OptimizerInterface, RMSPropOptimizer
 from .regularizers import RegularizerInterface, RidgeRegularizer
 
 
@@ -35,7 +35,7 @@ class LogisticRegression:
     """
     theta: np.ndarray
 
-    def __init__(self, optimizer: OptimizerInterface = AdamOptimizer(),
+    def __init__(self, optimizer: OptimizerInterface = RMSPropOptimizer(),
                  regularizer: RegularizerInterface = RidgeRegularizer(),
                  num_iterations=300, threshold: np.float = 0.5, fit_intercept: bool = True, verbose: bool = False):
         self.optimizer = optimizer
