@@ -50,16 +50,16 @@ class LogisticRegression:
         self.verbose = verbose
 
     def __str__(self):
-            return f"{type(self).__name__}(optimizer: {self.optimizer}, regularizer:" \
-                   f" {self.regularizer}, num_iterations: {self.num_iterations}, threshold: {self.threshold}, " \
-                   f"fit_intercept: {self.fit_intercept})"
+        return f"{type(self).__name__}(optimizer: {self.optimizer}, regularizer:" \
+               f" {self.regularizer}, num_iterations: {self.num_iterations}, threshold: {self.threshold}, " \
+               f"fit_intercept: {self.fit_intercept})"
 
     def __repr__(self):
         return f"{type(self).__name__}(optimizer: {self.optimizer}, regularizer:" \
                f" {self.regularizer}, num_iterations: {self.num_iterations}, threshold: {self.threshold}, " \
                f"fit_intercept: {self.fit_intercept})"
 
-    def get_params(self):
+    def get_params(self, deep=False):
         return {
                 "optimizer": self.optimizer,
                 "regularizer": self.regularizer,
