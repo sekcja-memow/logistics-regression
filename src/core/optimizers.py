@@ -190,7 +190,7 @@ class AdamOptimizer(OptimizerInterface):
     beta1: np.float, default=0.9
         Hyperparameter responsible for introducing the exponential distribution
         at the first stage of learning.
-    beta1: np.float, default=0.999
+    beta2: np.float, default=0.999
         Hyperparameter responsible for introducing the exponential distribution
         at the first stage of learning.
     epsilon: np.float, default=1e-7

@@ -1,6 +1,5 @@
 #### Available Models
 1. `Logistic Regression`
-2. `SVM`
 
 #### Regularizers
 1. `LassoRegularizer`
@@ -15,7 +14,7 @@
 5. `AdamOptimizer`
 
 #### Interface
-<img width="800" src="./images/structure.png"/>
+<img width="800" src="./images/interface.png"/>
 
 
 
@@ -44,9 +43,14 @@ or Elastic-Net regularization. Additionally in `LinearRegression` model, you can
 | `verbose` | Verbosity during optimization. | `False` | `bool` |
 
 
+
 By default `LogisticRegression` has **ridge** regularization (L2, with $\alpha=0.1$), default `AdamOptimizer` as a solving algorithm.
 
 ##### 1.2 Attributes
+
+| Attribute        | Description           | Default value  | type |
+| ------------- |:-------------:| -----:| ----:|
+| `theta` | Coefficient of the X (features) in logistic regression. | `np.zeros(X.shape[1])` | `np.ndarray`
  
 
 ##### 1.3 Examples of usage
@@ -62,4 +66,149 @@ model = LogisticRegression(regularizer=l1, optimizer=momentum, num_iterations=50
 model.fit(X_train, y_train)
 ```
 
-  
+#### 2. Regularizers
+
+Our implementation provides 3 types of regularizers:
+1. `LassoRegularizer`
+2. `RidgeRegularizer`
+3. `ElasticNetRegularizer`
+
+> **Regularization** is the process of adding information in order to solve an ill-posed problem or to prevent overfitting.
+
+
+#### 2.1 `LassoRegularizer`
+Regularizer L1 (Lasso Regularizer) is used to limit model's cost and gradient functions. [Read more](https://en.wikipedia.org/wiki/Regularization_(mathematics))
+
+Parameters:
+* `alpha: np.float = 0.1` - alpha is the L1 regularization factor.
+
+Example of usage:
+```python
+>>> regularizer = RegularizerL1()
+>>> regularizer.cost(theta)
+[ 1.2 3.1 1.0 -1.8 ]
+>>> regularizer.gradient(theta)
+[ 0.2 4.1 1.3 -2.4 ]
+```
+
+#### 2.2 `RidgeRegularizer`
+Regularizer L2 (Ridge Regularizer) is used to limit model's cost and gradient functions. [Read more](https://en.wikipedia.org/wiki/Regularization_(mathematics))
+
+Parameters:
+* `alpha: np.float = 0.1` - alpha is the L2 regularization factor.
+
+Example of usage:
+```python
+>>> regularizer = RegularizerL2()
+>>> regularizer.cost(theta)
+[ 1.2 3.1 1.0 -1.8 ]
+>>> regularizer.gradient(theta)
+[ 0.2 4.1 1.3 -2.4 ]
+```
+
+#### 2.3 `ElasticNetRegularizer`
+ElasticNetRegularizer is the combination of L1 and L2 regularizers, it is used to limit model's cost and gradient. [Read more](https://en.wikipedia.org/wiki/Regularization_(mathematics))
+
+Parameters:
+* `alpha: np.float = 0.1` - alpha is L1 the regularization factor.
+* `beta: np.float = 0.1` - beta is L2 the regularization factor.
+* `gamma: np.float = 0.8` -  gamma is the mixing parameter between ridge and lasso.
+
+Example of usage:
+```python
+>>> regularizer = ElasticNetRegularizer()
+>>> regularizer.cost(theta)
+[ 1.2 3.1 1.0 -1.8 ]
+>>> regularizer.gradient(theta)
+[ 0.2 4.1 1.3 -2.4 ]
+```
+
+
+#### 3. Optimizers
+
+Optimizers are algorithms responsible for reducing the cost function during gradient descent algorithm. 
+
+They tie together the loss function and model parameters by updating the model in response to the output of the loss function.
+
+
+Our implementation provides 5 types of optimizers:
+
+1. `GradientDescentOptimizer`
+2. `MomentumGradientDescentOptimizer`
+3. `AdaGradOptimizer`
+4. `RMSPropOptimizer`
+5. `AdamOptimizer`
+
+
+##### 3.1 `GradientDescentOptimizer`
+Gradient descent is a first-order iterative optimization algorithm for finding a local minimum of a differentiable function. [Read more](https://en.wikipedia.org/wiki/Gradient_descent)
+
+Parameters:
+* `learning_rate: np.float = 0.03` - Learning rate parameter used in optimizer function.
+
+Example of usage:
+```python
+>>> optimizer = GradientDescentOptimizer()
+>>> optimizer.optimize(theta, gradient)
+[ 1.2 3.1 1.0 -1.8 ]
+```
+
+##### 3.2 `MomentumGradientDescentOptimizer`
+Momentum is a method that helps accelerate SGD in the relevant direction and dampens oscillations. [Read more](https://ml-cheatsheet.readthedocs.io/en/latest/optimizers.html#momentum)
+
+Parameters:
+* `learning_rate: np.float = 0.03` - Learning rate parameter used in optimizer function.
+* `momentum_rate: np.float = 0.9` - Momentum rate parameter used in momentum optimizer algorithm. Momentum rate must be from interval from 0 to 1.
+
+Example of usage:
+```python
+>>> optimizer = MomentumGradientDescentOptimizer()
+>>> optimizer.optimize(theta, gradient)
+[ 1.2 3.1 1.0 -1.8 ]
+```
+
+##### 3.3 `AdaGradOptimizer`
+Adagrad is an optimizer with parameter-specific learning rates, which are adapted relative to how frequently a parameter gets updated during training. The more updates a parameter receives, the smaller the updates. [Read more](https://ml-cheatsheet.readthedocs.io/en/latest/optimizers.html#adagrad)
+
+Parameters:
+* `learning_rate: np.float = 0.03` - Learning rate parameter used in optimizer function.
+* `epsilon: np.float = 1e-7` - Epsilon is the small ceoffiecent used to avoid dividing by 0.
+
+Example of usage:
+```python
+>>> optimizer = AdaGradOptimizer()
+>>> optimizer.optimize(theta, gradient)
+[ 1.2 3.1 1.0 -1.8 ]
+```
+
+##### 3.4 `RMSPropOptimizer`
+RMS Prop Optimizer is another algorithm that adapts to the data.
+[Read more](https://ml-cheatsheet.readthedocs.io/en/latest/optimizers.html#rmsprop)
+
+Parameters:
+* `learning_rate: np.float = 0.03` - Learning rate parameter used in optimizer function.
+* `beta: np.float = 0.09` - Hyperparameter responsible for introducing the exponential distribution at the first stage of learning.
+* `epsilon: np.float = 1e-7` - Epsilon is the small ceoffiecent used to avoid dividing by 0.
+
+Example of usage:
+```python
+>>> optimizer = RMSPropOptimizer()
+>>> optimizer.optimize(theta, gradient)
+[ 1.2 3.1 1.0 -1.8 ]
+```
+
+##### 3.5 `AdamOptimizer`
+Adam is an adaptive learning rate optimization algorithm that’s been designed specifically for training deep neural networks. [Read more](https://ml-cheatsheet.readthedocs.io/en/latest/optimizers.html#adam)
+
+Parameters:
+* `learning_rate: np.float = 0.03` - Learning rate parameter used in optimizer function.
+* `beta1: np.float = 0.9` - Hyperparameter responsible for introducing the exponential distribution at the first stage of learning.
+* `beta2: np.float = 0.999`
+* `epsilon: np.float = 1e-7` - Epsilon is the small ceoffiecent used to avoid dividing by 0.
+
+Example of usage:
+```python
+>>> optimizer = AdamOptimizer()
+>>> optimizer.optimize(theta, gradient)
+[ 1.2 3.1 1.0 -1.8 ]
+```

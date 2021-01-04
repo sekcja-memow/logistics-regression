@@ -121,12 +121,12 @@ class ElasticNetRegularizer(RegularizerInterface):
     alpha: np.float, default=0.1
         alpha is L1 the regularization factor.
     beta: np.float, default=0.1
-        alpha is L2 the regularization factor.
+        beta is L2 the regularization factor.
     gamma: np.float, default=0.8
         gamma is the mixing parameter between ridge and lasso.
     Examples
     --------
-    >>> regularizer = RegularizerL1()
+    >>> regularizer = ElasticNetRegularizer()
     >>> regularizer.cost(theta)
     [ 1.2 3.1 1.0 -1.8 ]
     >>> regularizer.gradient(theta)
