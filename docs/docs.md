@@ -45,7 +45,7 @@ or Elastic-Net regularization. Additionally in `LinearRegression` model, you can
 
 
 
-By default `LogisticRegression` has **ridge** regularization (L2, with $\alpha=0.1$), default `AdamOptimizer` as a solving algorithm.
+By default `LogisticRegression` has **ridge** regularization (L2, with alpha=0.1), default `AdamOptimizer` as a solving algorithm.
 
 ##### 1.2 Attributes
 
