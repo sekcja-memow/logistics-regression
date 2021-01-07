@@ -11,7 +11,7 @@ At the end, we will compare the results of our model with the ready implementati
 ### Introduction
 **Logistic regression**, despite its name, is a linear model for classification rather than regression.
 Logistic regression is also often called *logit regression* because it uses a logistic function to predict the results.
-LR is a propabilistic model that assigns the probability of a sample to a given class.
+LR is a probabilistic model that assigns the probability of a sample to a given class.
 You can find more about linear regression [here](https://en.wikipedia.org/wiki/Logistic_regression).
 
 
@@ -31,7 +31,7 @@ model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
 score = model.evaluate(y_test, y_pred)
 ```
-You can find more examples in [examples section :fire:](./src/examples.ipynb).
+You can find more examples in [examples section :fire:](./src).
 
 
 ### Credits

@@ -12,11 +12,11 @@ class LogisticRegression:
     Parameters
     ----------
     optimizer: Optimizer instance: OptimizerInterface, default=AdamOptimizer()
-        Optimizer algorithm used to optimize model cost.
+        Optimization algorithm used to optimize model cost.
     regularizer: Regularizer instance: RegularizerInterface, default=RidgeRegularizer()
         Regularization algorithm is used to limit the models cost function.
     num_iterations: int, default=300
-        Number of iterations for the optimizer algorithm..
+        Number of iterations for the optimization algorithm..
     threshold: float, default=0.5
         Logistic regression decision threshold.
     verbose: boolean, default=False
@@ -96,7 +96,7 @@ class LogisticRegression:
 
     def gradient(self, X: np.ndarray, y: np.ndarray, theta: np.ndarray) -> np.ndarray:
         """
-        Computes the gradient of the cost function, which is used by optimizer algorithm.
+        Computes the gradient of the cost function, which is used by optimization algorithm.
         Parameters
         ----------
         X: np.ndarray

@@ -58,7 +58,7 @@ class MomentumGradientDescentOptimizer(OptimizerInterface):
     learning_rate: np.float, default=0.03
         Learning rate parameter used in optimizer function.
     momentum_rate: np.float, default=0.9
-        Momentum rate parameter used in momentum optimizer algorithm.
+        Momentum rate parameter used in momentum optimization algorithm.
         Momentum rate must be from interval from 0 to 1.
     Attributes
     ----------
