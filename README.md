@@ -29,7 +29,7 @@ model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
 score = model.evaluate(y_test, y_pred)
 ```
-You examples can be bound inside the [examples section :fire:](./src).
+You examples can be found inside the [examples section :fire:](./src).
 
 
 ### Credits
