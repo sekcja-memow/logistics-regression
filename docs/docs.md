@@ -19,7 +19,7 @@
 
 
 #### 1. Logistic Regression
-Logistic Regression is generalized linear model which means that the result of the prediction is linear combination of the features:
+Logistic Regression is a generalized linear model which means that the result of the prediction is a linear combination of the features:
 
 <a href="https://www.codecogs.com/eqnedit.php?latex=\hat&space;y&space;(\theta,&space;x)&space;=&space;\theta_0&space;&plus;&space;\theta_1&space;x_1&space;&plus;&space;\ldots&space;&plus;&space;\theta_n&space;x_n" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\hat&space;y&space;(\theta,&space;x)&space;=&space;\theta_0&space;&plus;&space;\theta_1&space;x_1&space;&plus;&space;\ldots&space;&plus;&space;\theta_n&space;x_n" title="\hat y (\theta, x) = \theta_0 + \theta_1 x_1 + \ldots + \theta_n x_n" /></a>
 
@@ -27,11 +27,11 @@ Logistic Regression is generalized linear model which means that the result of t
 
 **Logistic regression**, despite its name, is a linear model for classification rather than regression.
 Logistic regression is also often called *logit regression* because it uses a logistic function to predict the results.
-LR is a probabilistic model that assigns the probability of a sample to a given class.
+LR is a probabilistic model that assigns the probability of the sample to a given class.
 You can find more about linear regression [here](https://en.wikipedia.org/wiki/Logistic_regression).
 
 Logistic regression is implemented in `LogisticRegression`. This implementation support any solving algorithms with additionally L1, L2
-or Elastic-Net regularization. Additionally in `LinearRegression` model, you can fit intercept - if bias should be added to the decision function.
+or Elastic-Net regularization. Additionally, in `LinearRegression` model, you can fit intercept if bias should be added to the decision function.
 
 ##### 1.1 Parameters
 | Parameter        | Description           | Default value  | type |
@@ -84,7 +84,7 @@ Our implementation provides 3 types of regularizers:
 
 
 #### 2.1 `LassoRegularizer`
-Regularizer L1 (Lasso Regularizer) is used to limit model's cost and gradient functions. 
+Regularizer L1 (Lasso Regularizer) limits the model's cost and gradient functions. 
 The lasso regularization thus acts as a feature selection mechanism. He gradually rejects the linear attributes and leaves the set of the most important ones.
 [Read more](https://en.wikipedia.org/wiki/Regularization_(mathematics))
 
@@ -101,7 +101,7 @@ Example of usage:
 ```
 
 #### 2.2 `RidgeRegularizer`
-Regularizer L2 (Ridge Regularizer) is used to limit model's cost and gradient functions. Ridge regularization means that we do not get rid of non-essential features, but rather minimize their impact on the trained model.
+Regularizer L2 (Ridge Regularizer) limits the model's cost and gradient functions. Ridge regularization means that we do not eliminate non-essential features but rather minimize their impact on the trained model.
 [Read more](https://en.wikipedia.org/wiki/Regularization_(mathematics))
 
 Parameters:
@@ -117,7 +117,7 @@ Example of usage:
 ```
 
 #### 2.3 `ElasticNetRegularizer`
-ElasticNetRegularizer is the combination of L1 and L2 regularizers, it is used to limit model's cost and gradient. The regularization factor in this case is formed by a simple combination of the terms of both of the techniques mentioned.
+ElasticNetRegularizer combines L1 and L2 regularizers; it is used to limit the model's cost and gradient. In this case, the regularization factor is formed by a simple combination of the terms of both of the techniques mentioned.
 [Read more](https://en.wikipedia.org/wiki/Regularization_(mathematics))
 
 Parameters:
@@ -139,15 +139,15 @@ Example of usage:
 
 We use a method called **gradient descent** to train our model. This method iteratively reduces the cost function.
 
-From a mathematical point of view, the gradient is the direction in which the function grows the most, it turns out that the opposite direction to the gradient indicates the place where the local minimum of the function can be.
+From a mathematical point of view, the gradient is the direction in which the function grows the most. It turns out that the opposite direction to the gradient indicates the place where the local minimum of the function can be.
 
-This means that iteratively moving in the opposite direction to the function gradient, we are able to find the local minimum of the cost function.
+This means that iteratively moving in the opposite direction to the function gradient, and we are able to find the cost function's local minimum.
 
 <a href="https://www.codecogs.com/eqnedit.php?latex=\theta'&space;=&space;\theta&space;-&space;\mu&space;\nabla&space;f" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\theta'&space;=&space;\theta&space;-&space;\mu&space;\nabla&space;f" title="\theta' = \theta - \mu \nabla f" /></a>
 
-**Optimizers** are algorithms responsible for reducing the cost function during gradient descent algorithm. 
+**Optimizers** are algorithms responsible for reducing the cost function during the gradient descent algorithm. 
 
-They tie together the loss function and model parameters by updating the model in response to the output of the loss function.
+They tie together the loss function and model parameters by updating the model in response to the loss function's output.
 
 
 Our implementation provides 5 types of optimizers:
@@ -158,7 +158,7 @@ Our implementation provides 5 types of optimizers:
 4. `RMSPropOptimizer`
 5. `AdamOptimizer`
 
-The basic difference in the operation of these algorithms consists in their ability to bypass places where the cost function is not very variable, and they are able to find the optimum faster than basic gradient descent algorithm.
+The basic difference in these algorithms' operation consists of their ability to bypass places where the cost function is not very variable. They can find the optimum faster than the basic gradient descent algorithm.
 
 ##### 3.1 `GradientDescentOptimizer`
 Gradient descent is a first-order iterative optimization algorithm for finding a local minimum of a differentiable function. [Read more](https://en.wikipedia.org/wiki/Gradient_descent)
@@ -188,7 +188,7 @@ Example of usage:
 ```
 
 ##### 3.3 `AdaGradOptimizer`
-Adagrad is an optimizer with parameter-specific learning rates, which are adapted relative to how frequently a parameter gets updated during training. The more updates a parameter receives, the smaller the updates. [Read more](https://ml-cheatsheet.readthedocs.io/en/latest/optimizers.html#adagrad)
+Adagrad is an optimizer with parameter-specific learning rates adapted relative to how frequently a parameter gets updated during training. The more updates a parameter receives, the smaller the updates. [Read more](https://ml-cheatsheet.readthedocs.io/en/latest/optimizers.html#adagrad)
 
 Parameters:
 * `learning_rate: np.float = 0.03` - Learning rate parameter used in optimizer function.
@@ -218,7 +218,7 @@ Example of usage:
 ```
 
 ##### 3.5 `AdamOptimizer`
-Adam is an adaptive learning rate optimization algorithm that’s been designed specifically for training deep neural networks. [Read more](https://ml-cheatsheet.readthedocs.io/en/latest/optimizers.html#adam)
+Adam is an adaptive learning rate optimization algorithm designed specifically for training deep neural networks. [Read more](https://ml-cheatsheet.readthedocs.io/en/latest/optimizers.html#adam)
 
 Parameters:
 * `learning_rate: np.float = 0.03` - Learning rate parameter used in optimizer function.
