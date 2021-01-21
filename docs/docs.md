@@ -53,7 +53,7 @@ The main difference between the two models is the way the *f* function is define
 
 Logit function has slightly flatter tails, while the probit curve will move closer to the axis faster.
 
-![logit](https://assets.datacamp.com/production/repositories/2698/datasets/7d991dbeee8e40eb7b0d23398d7861f00e813620/probitVsLogit.jpg)
+![logit](./images/probitVsLogit.jpg)
 
 **Which one is better?** 
 
