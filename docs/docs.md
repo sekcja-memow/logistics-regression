@@ -33,6 +33,42 @@ You can find more about linear regression [here](https://en.wikipedia.org/wiki/L
 Logistic regression is implemented in `LogisticRegression`. This implementation support any solving algorithms with additionally L1, L2
 or Elastic-Net regularization. Additionally, in `LinearRegression` model, you can fit intercept if bias should be added to the decision function.
 
+
+### Logit vs. probit models
+
+Each logit and probit model is used to predict binary variables ex. *yes* or *no*. Both of these models provides fitting a nonlinear function to the training data - they do it in such a way that it is possible to match a certain decision line.
+Usually logi and probil models scale function values in some way to a range between 0 and 1, which may correspond to the probability of the object belonging to a given class.
+
+In fact, any function that scales values from 0 to 1 could be used here, but the use of the probit and logit functions involves dependencies on the probability distribution of a certain feature.
+
+Without going into detail, probit and logit models transform a function from a linear into a nonlinear one.
+
+* Function before transformation: *y = ax + b*,
+* Function after nonlinear transform: *y = f(ax + b)*.
+
+The main difference between the two models is the way the *f* function is defined:
+> The logit model uses something called the cumulative distribution function of the logistic distribution.
+
+> The probit model uses something called the cumulative distribution function of the standard normal distribution to define *f(∗)*
+
+Logit function has slightly flatter tails, while the probit curve will move closer to the axis faster.
+
+<img width="600" src="https://assets.datacamp.com/production/repositories/2698/datasets/7d991dbeee8e40eb7b0d23398d7861f00e813620/probitVsLogit.jpg">
+
+**Which one is better?** 
+
+We use the logit function when implementing logistic regression, the probit function is applicable to other models.
+
+The use of logit and probit is associated with the subsequent application of the model, for example, we use logit for medical data, where the coefficients can be interpreted in terms of odds ratios. However, we will use probit in models used in economics.
+
+It all depends on the situation for which the model is to be used. Many sources have divergent views on which one is better - it all depends on the specific situation.
+
+
+Credits: 
+* https://tutorials.methodsconsultants.com/posts/what-is-the-difference-between-logit-and-probit-models/
+* https://assets.datacamp.com/production/repositories/2698/datasets/7d991dbeee8e40eb7b0d23398d7861f00e813620/probitVsLogit.jpg
+
+
 ##### 1.1 Parameters
 | Parameter        | Description           | Default value  | type |
 | ------------- |:-------------:| -----:| ----:|
